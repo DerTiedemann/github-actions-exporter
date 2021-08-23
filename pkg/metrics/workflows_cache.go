@@ -23,13 +23,13 @@ func workflowCache() {
 		for _, repo := range config.Github.Repositories.Value() {
 			r := strings.Split(repo, "/")
 			s := make(map[int64]github.Workflow)
-			opt := &github.ListOptions{PerPage: 30}
+			opt := &github.ListOptions{PerPage: int(config.Github.PageSize)}
 
 			for {
 				resp, rr, err := client.Actions.ListWorkflows(context.Background(), r[0], r[1], opt)
 				if err != nil {
 					log.Printf("ListWorkflows error for %s: %s", repo, err.Error())
-					break
+					panic(err)
 				}
 				for _, w := range resp.Workflows {
 					s[*w.ID] = *w

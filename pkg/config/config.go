@@ -10,14 +10,16 @@ var (
 		AppPrivateKey     string `split_words:"true"`
 		Token             string
 		Refresh           int64
+		PageSize          int64
+		RateLimit         int64
 		Repositories      cli.StringSlice
 		Organizations     cli.StringSlice
-		APIURL            string			
+		APIURL            string
 	}
-	Port  int
-	Debug bool
-	EnterpriseName    string
-	WorkflowFields    string
+	Port           int
+	Debug          bool
+	EnterpriseName string
+	WorkflowFields string
 )
 
 // InitConfiguration - set configuration from env vars or command parameters
@@ -66,6 +68,22 @@ func InitConfiguration() []cli.Flag {
 			Value:       30,
 			Usage:       "Refresh time Github Pipelines status in sec",
 			Destination: &Github.Refresh,
+		},
+		&cli.Int64Flag{
+			Name:        "github_pagesize",
+			Aliases:     []string{"gps"},
+			EnvVars:     []string{"GITHUB_PAGESIZE"},
+			Value:       70,
+			Usage:       "The amount of entries to fetch per request",
+			Destination: &Github.PageSize,
+		},
+		&cli.Int64Flag{
+			Name:        "github_ratelimit",
+			Aliases:     []string{"grl"},
+			EnvVars:     []string{"GITHUB_RATELIMIT"},
+			Value:       30,
+			Usage:       "The amount of requests made per hour",
+			Destination: &Github.RateLimit,
 		},
 		&cli.StringFlag{
 			Name:        "github_api_url",

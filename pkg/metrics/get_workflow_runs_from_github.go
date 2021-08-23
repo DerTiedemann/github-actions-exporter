@@ -54,7 +54,7 @@ func getWorkflowRunsFromGithub() {
 		for _, repo := range config.Github.Repositories.Value() {
 			r := strings.Split(repo, "/")
 			opt := &github.ListWorkflowRunsOptions{
-				ListOptions: github.ListOptions{PerPage: 30},
+				ListOptions: github.ListOptions{PerPage: int(config.Github.PageSize)},
 			}
 
 			for {
