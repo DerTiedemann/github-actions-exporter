@@ -15,4 +15,5 @@ require (
 	github.com/urfave/cli/v2 v2.3.0
 	github.com/valyala/fasthttp v1.22.0
 	golang.org/x/oauth2 v0.0.0-20210311163135-5366d9dc1934
+	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac
 )

@@ -81,7 +81,7 @@ func InitConfiguration() []cli.Flag {
 			Name:        "github_ratelimit",
 			Aliases:     []string{"grl"},
 			EnvVars:     []string{"GITHUB_RATELIMIT"},
-			Value:       30,
+			Value:       5000,
 			Usage:       "The amount of requests made per hour",
 			Destination: &Github.RateLimit,
 		},

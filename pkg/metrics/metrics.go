@@ -4,10 +4,12 @@ import (
 	"context"
 	"fmt"
 	"github-actions-exporter/pkg/config"
+	"github-actions-exporter/pkg/util"
 	"log"
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/bradleyfalzon/ghinstallation"
 	"github.com/google/go-github/v38/github"
@@ -74,7 +76,8 @@ func NewClient() (*github.Client, error) {
 	)
 	if len(config.Github.Token) > 0 {
 		log.Printf("authenticating with Github Token")
-		transport = oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{AccessToken: config.Github.Token})).Transport
+		auth := oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{AccessToken: config.Github.Token})).Transport
+		transport = util.NewThrottledTransport(time.Hour, int(config.Github.RateLimit), auth)
 		httpClient = &http.Client{Transport: transport}
 	} else {
 		log.Printf("authenticating with Github App")
@@ -89,7 +92,8 @@ func NewClient() (*github.Client, error) {
 			}
 			tr.BaseURL = githubAPIURL
 		}
-		httpClient = &http.Client{Transport: tr}
+		transport = util.NewThrottledTransport(time.Hour, int(config.Github.RateLimit), tr)
+		httpClient = &http.Client{Transport: transport}
 	}
 
 	if config.Github.APIURL != "api.github.com" {
